@@ -1,0 +1,145 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find myrt_robot)/description/materials.xacro" />
+
+<xacro:property name="wheel_radius" value="0.035"/>
+<xacro:property name="wheel_thickness" value="0.02"/>
+<xacro:property name="wheel_mass" value="0.2"/>
+<xacro:property name="caster_wheel_radius" value="0.026141"/>
+<xacro:property name="caster_wheel_mass" value="0.1"/>
+
+<joint name="base_footprint_joint" type="fixed">
+  <parent link="base_link"/>
+  <child link="base_footprint"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+
+<link name="base_footprint">
+</link>
+
+<link name="base_link">
+  <inertial>
+    <origin xyz="-0.005628890071166558 -1.932837370238976e-10 0.07346730552183806" rpy="0 0 0"/>
+    <mass value="1.5"/>
+    <inertia ixx="0.008772" iyy="0.015591" izz="0.01802" ixy="-0.0" iyz="0.0" ixz="0.000755"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find myrt_robot)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find myrt_robot)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<gazebo reference="base_link">
+  <material>Gazebo/White</material>
+</gazebo>
+
+<link name="left_wheel_1">
+  <inertial>
+    <origin xyz="4.499476740082997e-07 0.014071170243280452 3.6959849514933696e-07" rpy="0 0 0"/>
+    <mass value="0.2"/>
+    <inertia ixx="0.000159" iyy="0.000296" izz="0.000159" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.041219 -0.049729 -0.035" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find myrt_robot)/meshes/left_wheel_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <geometry>
+        <sphere radius="${wheel_radius}"/>
+    </geometry>
+  </collision>
+</link>
+
+<gazebo reference="left_wheel_1">
+  <material>Gazebo/Black</material>
+  </gazebo>
+
+<link name="right_wheel_1">
+  <inertial>
+    <origin xyz="4.499476711980477e-07 -0.014071170243280452 3.6959849514933696e-07" rpy="0 0 0"/>
+    <mass value="0.2"/>
+    <inertia ixx="0.000159" iyy="0.000296" izz="0.000159" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.041219 0.049729 -0.035" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find myrt_robot)/meshes/right_wheel_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <geometry>
+        <sphere radius="${wheel_radius}"/>
+    </geometry>
+  </collision>
+</link>
+
+
+
+<link name="castor_1">
+  <inertial>
+    <origin xyz="9.095440359901952e-08 0.0 -0.01086613407596613" rpy="0 0 0"/>
+    <mass value="0.1173079846739032"/>
+    <inertia ixx="1.1e-05" iyy="1.1e-05" izz="1.2e-05" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.057955 -0.0 -0.026141" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find myrt_robot)/meshes/castor_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.057955 -0.0 -0.026141" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find myrt_robot)/meshes/castor_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<gazebo reference="castor_1">
+  <material>Gazebo/Black</material>
+  <mu1 value="0.001"/>
+  <mu2 value="0.001"/>
+  </gazebo>
+
+
+
+<joint name="left_wheel_joint" type="continuous">
+  <origin xyz="-0.041219 0.049729 0.035" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="left_wheel_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="right_wheel_joint" type="continuous">
+  <origin xyz="-0.041219 -0.049729 0.035" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="right_wheel_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+
+
+<joint name="castor_joint" type="fixed">
+  <origin xyz="0.057955 0.0 0.026141" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="castor_1"/>
+</joint>
+
+
+
+</robot>
