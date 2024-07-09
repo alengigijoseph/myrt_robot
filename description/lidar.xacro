@@ -4,10 +4,10 @@
     <joint name="laser_joint" type="fixed">
         <origin xyz="0.022 0.0 0.116141" rpy="0 0 0"/>
         <parent link="base_link"/>
-        <child link="laser_frame"/>
+        <child link="laser_link_1"/>
     </joint>
 
-    <link name="laser_frame">
+    <link name="laser_link_1">
         <inertial>
           <origin xyz="0.0 0.0 0.012500000000000039" rpy="0 0 0"/>
           <mass value="0.1"/>
@@ -28,7 +28,7 @@
         </collision>
       </link>
 
-    <gazebo reference="laser_frame">
+    <gazebo reference="laser_link_1">
         <material>Gazebo/Red</material>
 
         <sensor name="laser" type="ray">
@@ -53,7 +53,7 @@
                     <argument>~/out:=scan</argument>
                 </ros>
                 <output_type>sensor_msgs/LaserScan</output_type>
-                <frame_name>laser_frame</frame_name>
+                <frame_name>laser_link_1</frame_name>
             </plugin>
         </sensor>
     </gazebo>
