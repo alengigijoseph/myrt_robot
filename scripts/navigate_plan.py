@@ -6,53 +6,13 @@ import rclpy
 from rclpy.duration import Duration
 from energy_tracker.energy_tracker.detect_energy import DetectEnergy
 from energy_tracker.energy_tracker.follow_energy import FollowEnergy
-
-blue_tuning_params= {
-            'x_min': 0,
-            'x_max':100,
-            'y_min': 0,
-            'y_max': 100,
-            'h_min': 100,
-            'h_max': 130,
-            's_min': 50,
-            's_max': 255,
-            'v_min': 50,
-            'v_max': 255,
-            'sz_min': 0,
-            'sz_max': 100}
-        
-green_tuning_params= {
-            'x_min': 0,
-            'x_max':100,
-            'y_min': 0,
-            'y_max': 100,
-            'h_min': 60,
-            'h_max': 85,
-            's_min': 50,
-            's_max': 255,
-            'v_min': 50,
-            'v_max': 255,
-            'sz_min': 0,
-            'sz_max': 100
-        }
-
-yellow_tuning_params= {
-            'x_min': 0,
-            'x_max':100,
-            'y_min': 0,
-            'y_max': 100,
-            'h_min': 20,
-            'h_max': 30,
-            's_min': 50,
-            's_max': 255,
-            'v_min': 50,
-            'v_max': 255,
-            'sz_min': 0,
-            'sz_max': 100 }
- 
+from std_msgs.msg import String
 
 def main():
     rclpy.init()
+    energy_node = rclpy.create_node('energy_type_publisher')
+
+    energy_type_pub = energy_node.create_publisher(String, '/energy_type', 10)
 
     navigator = BasicNavigator()
 
@@ -75,7 +35,7 @@ def main():
     goal_pose1.pose.position.y = -0.77
     goal_pose1.pose.orientation.w = 1.0
     goal_pose1.pose.orientation.z = 0.0
-    navigate_to_pose_and_detect_energy(navigator,goal_pose1, blue_tuning_params)
+    navigate_to_pose_and_detect_energy(navigator,goal_pose1,energy_type_pub,'yellow')
     
 
     """ goal_pose2 = PoseStamped()
@@ -98,10 +58,9 @@ def main():
     navigate_to_pose_and_detect_energy(navigator,goal_pose3, green_tuning_params) """
 
 
-def navigate_to_pose_and_detect_energy(navigator,goal_pose,tuning_params):
+def navigate_to_pose_and_detect_energy(navigator,goal_pose,pub,color):
 
-    detect_energy = DetectEnergy(tuning_params)
-    follow_energy= FollowEnergy()
+    publish_energy_type(pub, color)
 
     navigator.goToPose(goal_pose)
 
@@ -133,11 +92,10 @@ def navigate_to_pose_and_detect_energy(navigator,goal_pose,tuning_params):
     # Do something depending on the return code
     result = navigator.getResult()
     if result == TaskResult.SUCCEEDED:
+        follow_ball = FollowEnergy()
+        rclpy.spin(follow_ball)
+        follow_ball.destroy_node()
         print('Goal succeeded!')
-        while rclpy.ok():
-            rclpy.spin_once(detect_energy)
-            rclpy.spin(follow_energy)
-        follow_energy.destroy_node()
     elif result == TaskResult.CANCELED:
         print('Goal was canceled!')
     elif result == TaskResult.FAILED:
@@ -149,6 +107,11 @@ def navigate_to_pose_and_detect_energy(navigator,goal_pose,tuning_params):
 
     exit(0)
 
+def publish_energy_type(publisher, energy_type):
+    msg = String()
+    msg.data = energy_type
+    publisher.publish(msg)
+    print(f'Published energy type: {msg.data}')
 
 if __name__ == '__main__':
     main()
