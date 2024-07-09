@@ -34,6 +34,11 @@ install(PROGRAMS
   scripts/multiple_goal_nav.py
   DESTINATION lib/${PROJECT_NAME}
 ) 
+install(PROGRAMS 
+  scripts/navigate_plan.py
+  DESTINATION lib/${PROJECT_NAME}
+) 
+
 
 
 

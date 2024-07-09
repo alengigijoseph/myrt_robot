@@ -8,8 +8,8 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
     config_dir = os.path.join(get_package_share_directory('myrt_robot'),'config')
-    map_file = os.path.join(get_package_share_directory('myrt_robot'),'maps','my_map.yaml')
-    param_file = os.path.join(config_dir,'nav3_params.yaml')
+    map_file = os.path.join(get_package_share_directory('myrt_robot'),'maps','my_map_save.yaml')
+    param_file = os.path.join(config_dir,'nav2_params.yaml')
     world_file= os.path.join(get_package_share_directory('myrt_robot'),'worlds','myrt_world.world')
     #rviz_config_dir = os.path.join(config_dir,'navigation.rviz')
 
@@ -29,12 +29,3 @@ def generate_launch_description():
         ),
 
     ])
-
-    """  Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2_node',
-            arguments=['-d', rviz_config_dir],
-            output='screen'
-
-            ), """
